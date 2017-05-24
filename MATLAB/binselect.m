@@ -4,3 +4,5 @@ function V = binselect (vox)
 V = speye(n);
 
 V = V(~isnan(vox), :);
+
+end
