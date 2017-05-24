@@ -1,7 +1,7 @@
-A = [1 1 1 1; 1 1 1 1; 1 1 1 1; 1 1 1 1];
+ncomp = 2;
 
-for i = 1:4
-   if i > 2
-      A(2:3,i) = NaN; 
-   end
-end
+opts = struct( 'maxiters', 30,...
+               'algorithm', 'vb',...
+               'minangle', 0 );
+           
+[ A, S, Mu, V, cv, hp, lc ] = pca_full( W', ncomp, opts );

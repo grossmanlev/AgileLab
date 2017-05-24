@@ -22,7 +22,7 @@ for f = 1:size(F,1)
     V = zeros([100 100 100]);
     for i = Vdata'
         tmp = i';
-        if(occ && tmp(1) > 10)
+        if(occ && tmp(1) > 0)
             V(tmp(1)+50,tmp(2)+50,tmp(3)+50) = NaN; % or NaN
         else
             V(tmp(1)+50,tmp(2)+50,tmp(3)+50) = 1; 
