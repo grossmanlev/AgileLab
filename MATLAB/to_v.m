@@ -1,6 +1,6 @@
 function [] = to_v(data)
 
-data = reshape(data, [100, 100, 100]); %resize to 100,100,100 matrix
+%data = reshape(data, [100, 100, 100]); %resize to 100,100,100 matrix
 
 [M,N,Z] = size(data);
 pts = [];

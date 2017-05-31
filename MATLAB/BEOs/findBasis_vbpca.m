@@ -25,7 +25,7 @@ function VBPCA_calculation(resolution, initalNumBasis, savePrefix, names, dataMa
         disp(['Processing ', name, ' class']);
 
         disp('Starting VBPCAd');
-        [A, S, Mu, V, CV, HP, LC] = pca_diag(dataMatrix, initalNumBasis, 'savebest', true, 'maxiters', 5); %#ok<ASGLU>
+        [A, S, Mu, V, CV, HP, LC] = pca_diag(dataMatrix, initalNumBasis, 'savebest', true, 'maxiters', 18); %#ok<ASGLU>
         save([savePrefix, name, '_', num2str(initalNumBasis), '_basis_size_', num2str(resolution), '_vobject.mat'], '-v7.3')
     end
 end
