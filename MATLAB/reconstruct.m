@@ -1,6 +1,6 @@
 function [] = reconstruct(W, O_p)
     % show partial object
-    vs = [0.5, 0.5, 0.5];
+    vs = [1, 1, 1];
     voxel_image(to_v(O_p), vs);
     view([-37.5, 30]);
     
