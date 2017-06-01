@@ -149,7 +149,7 @@ function [corseEDTRotationEstimate, fineRotationEstimate, estimatedClass, corseE
     % estimate (in probEstimatedRot), all that's left to do is save the
     % corosponding reconstruction
     fineReconstructedObject = reshape(fineReconObjs(I, :), vobjectSize1, vobjectSize2, vobjectSize3);
-    fineReconstructedObject(fineReconstructedObject < 0.5) = 0; % NOTE: changing this threshold down yields more complete voxel objects
+    fineReconstructedObject(fineReconstructedObject < 0.5) = 0; % NOTE: changing this threshold down yields more complete objects, abliet at a coast? (LG)
     fineReconstructedObject(fineReconstructedObject >= 0.5) = 1;
     
     if ~rotation % if we're not estimating rotation there is no difference between these two things
