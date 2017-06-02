@@ -1,35 +1,42 @@
-function findBasis_vbpca(dataMatrix)
+function findBasis_vbpca
     % currently hardcoded for modelnet 10
     % run from the dir where this file is located
-    
-    % TODO: edit to take in a data matrix
     
 	% this can take a LOT of memory, if there are issues, try setting initalNumBasis to 50 and setting autoBasisSizeFlag to false.
     resolution = 30;
 	autoBasisSizeFlag = true;
     initalNumBasis = 50;
 	
-	names = {'bottles'};
     savePrefix = [pwd, '/VBPCA/'];
     
-    VBPCA_calculation(resolution, initalNumBasis, savePrefix, names, dataMatrix); % find basis
+    names = {'funnel'};
+    pathPrefix = [pwd, '/Objects/'];
+    pathPostfix = ['/', num2str(resolution), '/train'];
+    
+    VBPCA_calculation(resolution, initalNumBasis, savePrefix, names, pathPrefix, pathPostfix); % find basis
 	if autoBasisSizeFlag
 		autoBasisSize(resolution, initalNumBasis, savePrefix, names); % auto basis size
 	end
 end
 %------------------- end hardcoded stuff --------------------- %
-function VBPCA_calculation(resolution, initalNumBasis, savePrefix, names, dataMatrix)
+function VBPCA_calculation(resolution, initalNumBasis, savePrefix, names, pathPrefix, pathPostfix)
     
     for i=1:numel(names)
         name = names{i};
         disp(['Processing ', name, ' class']);
-
+        path = [pathPrefix, name, pathPostfix];
+        transformedObjects = loadModelNetObjects(path);
+        
+        % convert each object into a column vector and then combine into data matrix
+        dataMatrix = reshape(transformedObjects,...
+            size(transformedObjects, 1)*size(transformedObjects, 2)*size(transformedObjects, 3),...
+            size(transformedObjects, 4));
+        clear('objects', 'transVecs', 'rtforms', 'transformedObjects');
         disp('Starting VBPCAd');
-        [A, S, Mu, V, CV, HP, LC] = pca_diag(dataMatrix, initalNumBasis, 'savebest', true, 'maxiters', 18); %#ok<ASGLU>
+        [A, S, Mu, V, CV, HP, LC] = pca_diag(dataMatrix, initalNumBasis, 'savebest', true, 'maxiters', 100); %#ok<ASGLU>
         save([savePrefix, name, '_', num2str(initalNumBasis), '_basis_size_', num2str(resolution), '_vobject.mat'], '-v7.3')
     end
 end
-
 
 function autoBasisSize(resolution, initalNumBasis, savePrefix, names)
     varthresh = 0.6;
@@ -58,7 +65,7 @@ function autoBasisSize(resolution, initalNumBasis, savePrefix, names)
         mask = cumPropVarience{j} <= varthresh;
         autoWs{j} = Ws{j}(:, mask);
         subspaces{j}.A = autoWs{j};
-        subspace = subspaces{j};
+        subspace = subspaces{j}; 
         save([savePrefix, names{j}, savePost], '-struct', 'subspace');
     end
 end

@@ -28,14 +28,14 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
     % tested on MATLAB 2016b
     % bcburch@cs.duke.edu
     
-    vobjectSize = 100; % NOTE: changed from 30
+    vobjectSize = 30; % NOTE: changed from 30
     step = 1;
     
     % paths for loading data
     pre = [pwd, '/VBPCA/'];
     post = ['_auto_basis_size_', num2str(vobjectSize), '_vobject.mat'];
     % class numbers are in this order, 1 being bathtub and 10 being toilet
-    names = {'bottles'};
+    names = {'funnel', 'oil_bottle'};
     pathPrefix = [pwd, '/Objects/'];
     
     train_path_postfix = ['/', num2str(vobjectSize), '/train'];
@@ -53,8 +53,8 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
         partialView = true;
     elseif strcmp(partialFlag, 'partial')
         partialView = true;
-        method = 'top'; % feel free to change this, the other option is 'side'
-        %method = 'side';
+        %method = 'top'; % feel free to change this, the other option is 'side'
+        method = 'side';
     elseif strcmp(partialFlag, 'full')
         partialView = false;
     else
@@ -157,6 +157,20 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
                 corseEDTReconstructedObjects{end+1}, fineReconstructedObjects{end+1}]...
                 = singleObjectRotClassifyComplete_1dof(rotatedTestObject, step, sharedMeans, sharedCovs, sharedBasisGPU, poseEstimateFlag); %#ok<AGROW>
             
+            
+            % LG: better visualization (for small test of test objects...
+            disp('Press any key to show original/partial object');
+            pause;
+            visualizeObject(rotatedTestObject);
+            
+            disp('Press any key to show corseEDT reconstructed object');
+            pause;
+            visualizeObject(corseEDTReconstructedObjects{end});
+            
+            disp('Press any key to show fine reconstructed object');
+            pause;
+            visualizeObject(fineReconstructedObjects{end});
+            
             % calculate pose estimation errors
             corseEDTDiff = rotm2axang(corseEDTEstimatedRotations{end} * trueRotations{end}'); % get distance between true rotation and estimate in radians
             corseEDTRotationError(end+1) = rad2deg(corseEDTDiff(4)); %#ok<AGROW> % convert to degrees
@@ -254,6 +268,7 @@ function [projMeans, projCovariences] = getSharedProjCovariencesAndMeans(W, trai
             projectedObjs(trainInstance, :) = (W' * objectVector)';
         end
         projCovariences{trainClass} = cov2paraBen(projectedObjs, 1); % uses more memory, but higher quality estimate
+        %projCovariences{trainClass} = cov(projectedObjs, 1);
         projMeans{trainClass} = mean(projectedObjs);
     end
 end

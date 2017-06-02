@@ -20,7 +20,7 @@ end
 savePath = [pwd, '/Objects/', className, '/', int2str(size), '/', type, '/'];
 
 cd(path);
-F = dir ([path,'/*.txt']);
+F = dir ('*.txt');
 
 for f = 1:numel(F)
     %Open file
@@ -38,9 +38,9 @@ for f = 1:numel(F)
     for i = Vdata'
         tmp = i';
         if(is_occ && tmp(1) > 0)
-            instance(tmp(1)+50,tmp(2)+50,tmp(3)+50) = NaN; % or NaN
+            instance(tmp(1)+(size/2),tmp(2)+(size/2),tmp(3)+(size/2)) = NaN; % or NaN
         else
-            instance(tmp(1)+50,tmp(2)+50,tmp(3)+50) = 1; 
+            instance(tmp(1)+(size/2),tmp(2)+(size/2),tmp(3)+(size/2)) = 1; 
         end
     end;
     
