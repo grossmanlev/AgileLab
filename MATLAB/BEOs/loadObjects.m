@@ -7,7 +7,9 @@
 
 % type is either 'test' or 'train'
 
-function[W] = loadObjects(path, className, size, type)
+% atOrigin -- boolean whether the object's minimum point is at (0,0,0)
+
+function[W] = loadObjects(path, className, size, type, atOrigin)
 % For now, assume he voxels will be stored in 100x100x100
 is_occ = false;
 og_path = pwd;
@@ -39,6 +41,8 @@ for f = 1:numel(F)
         tmp = i';
         if(is_occ && tmp(1) > 0)
             instance(tmp(1)+(size/2),tmp(2)+(size/2),tmp(3)+(size/2)) = NaN; % or NaN
+        elseif atOrigin
+            instance(tmp(1)+1,tmp(2)+1,tmp(3)+1) = 1; 
         else
             instance(tmp(1)+(size/2),tmp(2)+(size/2),tmp(3)+(size/2)) = 1; 
         end

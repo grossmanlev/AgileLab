@@ -9,7 +9,7 @@ function findBasis_vbpca
 	
     savePrefix = [pwd, '/VBPCA/'];
     
-    names = {'funnel'};
+    names = {'oil_bottle'};
     pathPrefix = [pwd, '/Objects/'];
     pathPostfix = ['/', num2str(resolution), '/train'];
     
