@@ -208,7 +208,7 @@ int main() try
             int ret = pcl::io::savePCDFileASCII ("new_image.pcd", cloud);
             if(ret != 0)
                 printf("RETURN: %d\n", ret);
-            std::cerr << "Saved " << cloud.points.size () << " data points to new_image.pcd." << std::endl;
+            std::cerr << "Saved " << cloud.points.size () << " data points to image.pcd." << std::endl;
             rename("new_image.pcd", "image.pcd");
 
             /* Release the file-mutex */
