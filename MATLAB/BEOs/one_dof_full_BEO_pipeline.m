@@ -35,7 +35,7 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
     pre = [pwd, '/VBPCA/'];
     post = ['_auto_basis_size_', num2str(vobjectSize), '_vobject.mat'];
     % class numbers are in this order, 1 being bathtub and 10 being toilet
-    names = {'funnel', 'oil_bottle'};
+    names = {'oil_bottle'};
     pathPrefix = [pwd, '/Objects/'];
     
     train_path_postfix = ['/', num2str(vobjectSize), '/train'];
