@@ -40,7 +40,8 @@
         canidateRotObjVectors = zeros((floor(359/step) + 1), numel(testObject));
         for index=1:numel(rots)
             k = (index-1)*step;
-            testRot = compose_rotation_d(0, 0, k);
+            %testRot = compose_rotation_d(0, 0, k);
+            testRot = compose_rotation_d(k, 0, 0); %y-axis rotation
             rots{index} = testRot;
             canidateRotObj = rotateObject(testObject, affine3d(), testRot);
             canidateRotObjVector = reshape(canidateRotObj, numel(canidateRotObj), 1, 1);
@@ -85,7 +86,8 @@
         corseEDTRotationEstimate = invert(rotationHolder);
         corseEDTRotationEstimate = corseEDTRotationEstimate.T(1:3, 1:3); % go from affine matrix to 3x3 rotation
         
-        [~, ~, z] = decompose_rotation_d(rots{i});
+        %[~, ~, z] = decompose_rotation_d(rots{i});
+        [z, ~, ~] = decompose_rotation_d(rots{i}); %x-axis rotation
         
         corseEDTReconstructedObject = reshape(reconObjs(i, :), vobjectSize1, vobjectSize2, vobjectSize3);
         corseEDTReconstructedObject(corseEDTReconstructedObject < 0.5) = 0;
@@ -100,7 +102,8 @@
         fineCanidateRotObjVectors = [];
         fineGrainRotAngles = [];
         for newZ = z-10:newStep:z+10
-            fineGrainRots{end+1} = compose_rotation_d(0, 0, newZ); %#ok<AGROW> % get rotation matrix corosponding to angle
+            %fineGrainRots{end+1} = compose_rotation_d(0, 0, newZ); %#ok<AGROW> % get rotation matrix corosponding to angle
+            fineGrainRots{end+1} = compose_rotation_d(newZ, 0, 0); %#ok<AGROW> % get rotation matrix corosponding to angle
             canidateRotObj = rotateObject(testObject, affine3d(), fineGrainRots{end}); % rotate the input object
             canidateRotObjVector = reshape(canidateRotObj, numel(canidateRotObj), 1, 1); % shape into vector
             fineCanidateRotObjVectors(end+1, :) = canidateRotObjVector; %#ok<AGROW> % save for later

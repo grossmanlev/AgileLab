@@ -35,7 +35,7 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
     pre = [pwd, '/VBPCA/'];
     post = ['_auto_basis_size_', num2str(vobjectSize), '_vobject.mat'];
     % class numbers are in this order, 1 being bathtub and 10 being toilet
-    names = {'oil_bottle'};
+    names = {'oil_bottle', 'funnel'};
     pathPrefix = [pwd, '/Objects/'];
     
     train_path_postfix = ['/', num2str(vobjectSize), '/train'];
@@ -151,6 +151,7 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
                 rotatedTestObject = testObject;
             end
             trueRotations{end+1} = R; %#ok<AGROW>
+            poseEstimateFlag = false; %x-axis rotation test
             
             % jointly estimate pose, class, and 3D geometry
             [corseEDTEstimatedRotations{end+1}, fineEstimatedRotations{end+1}, estimatedClass(end+1),...

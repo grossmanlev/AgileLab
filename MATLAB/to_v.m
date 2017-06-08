@@ -17,6 +17,8 @@ for i = 1:M
     end
 end
 
+pts = 
+
 vs = [0.5, 0.5, 0.5];
 voxel_image(pts, vs);
 view([-37.5, 30]);
