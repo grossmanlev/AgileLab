@@ -215,18 +215,20 @@ private:
     pcl::removeNaNFromPointCloud(*raw_cloud, *raw_cloud, nanIndexes);
     std::cout << "Loaded " << raw_cloud->points.size() << " points" << std::endl;
 
+
+
     /* Voxel Grid Filter */
-    pcl::VoxelGrid<pcl::PointXYZ> vfilter;
-    vfilter.setInputCloud (raw_cloud);
-    vfilter.setLeafSize (0.01f, 0.01f, 0.01f);
-    vfilter.filter (*vox_cloud);
+    // pcl::VoxelGrid<pcl::PointXYZ> vfilter;
+    // vfilter.setInputCloud (raw_cloud);
+    // vfilter.setLeafSize (0.01f, 0.01f, 0.01f);
+    // vfilter.filter (*vox_cloud);
 
     /* Statistical Outlier Removal Filter */
-    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
-    sor.setInputCloud(vox_cloud);
-    sor.setMeanK(50);
-    sor.setStddevMulThresh(1.0);
-    sor.filter(*cloud);
+    // pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+    // sor.setInputCloud(vox_cloud);
+    // sor.setMeanK(50);
+    // sor.setStddevMulThresh(1.0);
+    // sor.filter(*cloud);
 
 
     //create octree structure

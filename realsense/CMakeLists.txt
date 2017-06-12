@@ -22,13 +22,13 @@ else()
 endif()
 
 
-find_package(PCL 1.3 REQUIRED COMPONENTS common io)
+find_package(PCL 1.2 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 find_package(OpenGL REQUIRED)
-set(DEPENDENCIES realsense ${OPENGL_LIBRARIES} ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES})
+set(DEPENDENCIES realsense ${OPENGL_LIBRARIES} ${PCL_LIBRARIES})
 
 
 if(WIN32)
