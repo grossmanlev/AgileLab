@@ -24,7 +24,6 @@
 #include <vector>
 #include <chrono>
 
-#include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/common/common.h>
@@ -72,7 +71,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr filter_pointcloud(pcl::PointCloud<pcl::Point
 void display_pointcloud() {
     pcl::visualization::CloudViewer viewer ("PointCloud Viewer");
     std::this_thread::sleep_for(std::chrono::seconds(4));
-    viewer.showCloud(view_cloud);
+    Viewer.showCloud(view_cloud);
     while(!viewer.wasStopped ()) {
         if(mtx.try_lock()) {
             viewer.showCloud(view_cloud);
@@ -272,11 +271,11 @@ int main() try
             }
 
 
-            // int ret = pcl::io::savePCDFileASCII<pcl::PointXYZ> ("new_image.pcd", *cloud1);
-            // if(ret != 0)
-            //     printf("RETURN: %d\n", ret);
-            // std::cerr << "Saved " << cloud.points.size () << " data points to image.pcd." << std::endl;
-            // rename("new_image.pcd", "image.pcd");
+            int ret = pcl::io::savePCDFileASCII<pcl::PointXYZ> ("new_image.pcd", *cloud1);
+            if(ret != 0)
+                printf("RETURN: %d\n", ret);
+            std::cerr << "Saved " << cloud.points.size () << " data points to image.pcd." << std::endl;
+            rename("new_image.pcd", "image.pcd");
 
             // /* Release the file-mutex */
             
@@ -308,8 +307,9 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr filter_pointcloud(pcl::PointCloud<pcl::Point
     
     // VoxelGrid Filter
     pcl::VoxelGrid<pcl::PointXYZ> vox;
+    float leaf_size = 0.005f;
     vox.setInputCloud (cloud1);
-    vox.setLeafSize (0.01f, 0.01f, 0.01f);
+    vox.setLeafSize (leaf_size, leaf_size, leaf_size);
     vox.filter (*cloud2);
 
     if(false) {

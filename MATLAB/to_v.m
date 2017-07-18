@@ -8,7 +8,7 @@ pts = [];
 for i = 1:M
     for j = 1:N
         for k = 1:Z
-            if data(i,j,k) > 0.1
+            if data(i,j,k) > 0.5
                 %fprintf('%d %d %d\n', i,j,k);
                 tmp = [i j k];
                 pts = [pts; tmp];
@@ -16,8 +16,6 @@ for i = 1:M
         end
     end
 end
-
-pts = 
 
 vs = [0.5, 0.5, 0.5];
 voxel_image(pts, vs);

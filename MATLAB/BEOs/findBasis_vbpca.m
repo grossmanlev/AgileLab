@@ -9,7 +9,7 @@ function findBasis_vbpca
 	
     savePrefix = [pwd, '/VBPCA/'];
     
-    names = {'funnel'};
+    names = {'bottle'};
     pathPrefix = [pwd, '/Objects/'];
     pathPostfix = ['/', num2str(resolution), '/train'];
     
@@ -33,7 +33,7 @@ function VBPCA_calculation(resolution, initalNumBasis, savePrefix, names, pathPr
             size(transformedObjects, 4));
         clear('objects', 'transVecs', 'rtforms', 'transformedObjects');
         disp('Starting VBPCAd');
-        [A, S, Mu, V, CV, HP, LC] = pca_diag(dataMatrix, initalNumBasis, 'savebest', true, 'maxiters', 500); %#ok<ASGLU>
+        [A, S, Mu, V, CV, HP, LC] = pca_diag(dataMatrix, initalNumBasis, 'savebest', true, 'maxiters', 25000); %#ok<ASGLU>
         save([savePrefix, name, '_', num2str(initalNumBasis), '_basis_size_', num2str(resolution), '_vobject.mat'], '-v7.3')
     end
 end

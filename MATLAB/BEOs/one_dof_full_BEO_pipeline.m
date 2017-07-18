@@ -35,7 +35,7 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
     pre = [pwd, '/VBPCA/'];
     post = ['_auto_basis_size_', num2str(vobjectSize), '_vobject.mat'];
     % class numbers are in this order, 1 being bathtub and 10 being toilet
-    names = {'oil_bottle', 'funnel'};
+    names = {'bottle'};
     pathPrefix = [pwd, '/Objects/'];
     
     train_path_postfix = ['/', num2str(vobjectSize), '/train'];
@@ -53,8 +53,8 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
         partialView = true;
     elseif strcmp(partialFlag, 'partial')
         partialView = true;
-        %method = 'top'; % feel free to change this, the other option is 'side'
-        method = 'side';
+        method = 'top'; % feel free to change this, the other option is 'side'
+        %method = 'side';
     elseif strcmp(partialFlag, 'full')
         partialView = false;
     else
@@ -151,7 +151,6 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
                 rotatedTestObject = testObject;
             end
             trueRotations{end+1} = R; %#ok<AGROW>
-            poseEstimateFlag = false; %x-axis rotation test
             
             % jointly estimate pose, class, and 3D geometry
             [corseEDTEstimatedRotations{end+1}, fineEstimatedRotations{end+1}, estimatedClass(end+1),...
@@ -176,6 +175,8 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
             corseEDTDiff = rotm2axang(corseEDTEstimatedRotations{end} * trueRotations{end}'); % get distance between true rotation and estimate in radians
             corseEDTRotationError(end+1) = rad2deg(corseEDTDiff(4)); %#ok<AGROW> % convert to degrees
             fineDiff = rotm2axang(fineEstimatedRotations{end} * trueRotations{end}'); % get distance between true rotation and estimate in radians
+            %fineDiff = rotm2axang(fineEstimatedRotations{end} *
+            %trueRotations{end}); % this may be correct rotation
             fineRotationError(end+1) = rad2deg(fineDiff(4)); %#ok<AGROW> % convert to degrees
             
             % calculate reconstruction errors
