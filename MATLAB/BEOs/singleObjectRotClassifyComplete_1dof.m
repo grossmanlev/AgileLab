@@ -110,8 +110,48 @@
             fineGrainRotAngles(end+1) = newZ; %#ok<AGROW> % store the corosponding angle about z axis for easy reference later
         end
         
+        
     else
-        fineCanidateRotObjVectors = reshape(testObject, numel(testObject), 1, 1)';
+        if true
+            numSteps = 10;
+            trans = cell(numSteps, 1); % hold translations being considered
+            canidateTransObjVectors = zeros(numSteps, numel(testObject));
+            for index=1:numel(trans)
+                testTrans = (index - 1);
+                trans{index} = testTrans;
+                canidateTransObj = imtranslate(testObject, [0 0 testTrans]);
+                canidateTransObjVector = reshape(canidateTransObj, numel(canidateTransObj), 1, 1);
+                canidateTransObjVectors(index, :) = canidateTransObjVector;
+            end
+            %canidateRotObjVectorsGPU = gpuArray(canidateRotObjVectors);
+            canidateTransObjVectorsGPU = canidateTransObjVectors;
+
+            [~, gpuProjObjVec] = getDensities(sharedBasisGPU, sharedMeans, sharedCovs, canidateTransObjVectorsGPU);
+            reconObjs =  gpuProjObjVec * sharedBasisGPU';
+
+            rerrors = [];
+            for i=1:size(reconObjs, 1)
+                corseReconstructedObject = reshape(reconObjs(i, :), vobjectSize1, vobjectSize2, vobjectSize3);
+                thresh = mean(prctile(prctile(corseReconstructedObject,90),90));
+                disp(['Thresh: ', num2str(thresh)]);
+                corseReconstructedObject(corseReconstructedObject < thresh) = 0;
+                corseReconstructedObject(corseReconstructedObject >= thresh) = 1;
+                testObject_trans = imtranslate(testObject, [0 0 trans{i}]);
+                %rerrors(end+1) = interObjectDist(corseReconstructedObject, testObject_trans); %#ok<AGROW>
+                rerrors(end+1) = thresh;
+            end
+            [~, i] = max(rerrors); % find the index where the lowest error occured
+            % rots{i} is where we search arround now, get the angle about z axis (x and y will be zero here anyway);
+            transHolder = trans{i};
+            corseEDTReconstructedObject = reshape(reconObjs(i, :), vobjectSize1, vobjectSize2, vobjectSize3);
+            thresh = mean(prctile(prctile(corseEDTReconstructedObject,90),90));
+            corseEDTReconstructedObject(corseEDTReconstructedObject < thresh) = 0;
+            corseEDTReconstructedObject(corseEDTReconstructedObject >= thresh) = 1;
+            
+        end
+        
+        fineCanidateRotObjVectors = reshape(corseEDTReconstructedObject, numel(testObject), 1, 1)';
+        %fineCanidateRotObjVectors = reshape(corseEDTReconstructedObject, numel(corseEDTReconstructedObject), 1, 1)';
         fineGrainRots = {compose_rotation_d(0, 0, 0)};
         corseEDTRotationEstimate = fineGrainRots{1};
     end
@@ -152,7 +192,7 @@
     % estimate (in probEstimatedRot), all that's left to do is save the
     % corosponding reconstruction
     fineReconstructedObject = reshape(fineReconObjs(I, :), vobjectSize1, vobjectSize2, vobjectSize3);
-    thresh = 0.5; % mean(prctile(prctile(fineReconstructedObject,90),90));
+    thresh = mean(prctile(prctile(fineReconstructedObject,90),90));
     fineReconstructedObject(fineReconstructedObject < thresh) = 0; % NOTE: changing this threshold down yields more complete objects, abliet at a coast? (LG)
     fineReconstructedObject(fineReconstructedObject >= thresh) = 1;
     

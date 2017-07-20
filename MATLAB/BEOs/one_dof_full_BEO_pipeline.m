@@ -159,53 +159,53 @@ function fineReconstructedObjects = one_dof_full_BEO_pipeline(partialFlag, poseE
             
             
             % LG: better visualization (for small test of test objects...
-            disp('Press any key to show original/partial object');
-            pause;
-            visualizeObject(rotatedTestObject);
+%             disp('Press any key to show original/partial object');
+%             pause;
+%             visualizeObject(rotatedTestObject);
+%             
+%             disp('Press any key to show corseEDT reconstructed object');
+%             pause;
+%             visualizeObject(corseEDTReconstructedObjects{end});
+%             
+%             disp('Press any key to show fine reconstructed object');
+%             pause;
+%             visualizeObject(fineReconstructedObjects{end});
             
-            disp('Press any key to show corseEDT reconstructed object');
-            pause;
-            visualizeObject(corseEDTReconstructedObjects{end});
-            
-            disp('Press any key to show fine reconstructed object');
-            pause;
-            visualizeObject(fineReconstructedObjects{end});
-            
-            % calculate pose estimation errors
-            corseEDTDiff = rotm2axang(corseEDTEstimatedRotations{end} * trueRotations{end}'); % get distance between true rotation and estimate in radians
-            corseEDTRotationError(end+1) = rad2deg(corseEDTDiff(4)); %#ok<AGROW> % convert to degrees
-            fineDiff = rotm2axang(fineEstimatedRotations{end} * trueRotations{end}'); % get distance between true rotation and estimate in radians
-            %fineDiff = rotm2axang(fineEstimatedRotations{end} *
-            %trueRotations{end}); % this may be correct rotation
-            fineRotationError(end+1) = rad2deg(fineDiff(4)); %#ok<AGROW> % convert to degrees
-            
-            % calculate reconstruction errors
-            corseEDTReconstructionErrors(end+1) = interObjectDist(corseEDTReconstructedObjects{end}, groundTruthTestObject); %#ok<AGROW>
-            fineReconstructionErrors(end+1) = interObjectDist(fineReconstructedObjects{end}, groundTruthTestObject); %#ok<AGROW>
+%             % calculate pose estimation errors
+%             corseEDTDiff = rotm2axang(corseEDTEstimatedRotations{end} * trueRotations{end}'); % get distance between true rotation and estimate in radians
+%             corseEDTRotationError(end+1) = rad2deg(corseEDTDiff(4)); %#ok<AGROW> % convert to degrees
+%             fineDiff = rotm2axang(fineEstimatedRotations{end} * trueRotations{end}'); % get distance between true rotation and estimate in radians
+%             %fineDiff = rotm2axang(fineEstimatedRotations{end} *
+%             %trueRotations{end}); % this may be correct rotation
+%             fineRotationError(end+1) = rad2deg(fineDiff(4)); %#ok<AGROW> % convert to degrees
+%             
+%             % calculate reconstruction errors
+%             corseEDTReconstructionErrors(end+1) = interObjectDist(corseEDTReconstructedObjects{end}, groundTruthTestObject); %#ok<AGROW>
+%             fineReconstructionErrors(end+1) = interObjectDist(fineReconstructedObjects{end}, groundTruthTestObject); %#ok<AGROW>
         end
-        classAcc = computeClassifierAccuracy(estimatedClass(trueClass == testClass), trueClass(trueClass == testClass), numel(names));
-        disp(['Accuracy for ', prettyNames{testClass}, ' class: ', num2str(classAcc)]);
+%         classAcc = computeClassifierAccuracy(estimatedClass(trueClass == testClass), trueClass(trueClass == testClass), numel(names));
+%         disp(['Accuracy for ', prettyNames{testClass}, ' class: ', num2str(classAcc)]);
     end
     disp('Done');
     
     % end of experiment, plot results
-    if poseEstimateFlag
-        figure();
-        hist(fineRotationError)
-        title('Partial Object, Full Pipeline 1DOF')
-        xlabel('Rotation Error (Degrees)')
-        ylabel('Number of Occurences')
-        
-        figure();
-        hist(corseEDTRotationError)
-        title('Partial Object, 1DOF, EDT Error (corse)')
-        xlabel('Rotation Error (Degrees)')
-        ylabel('Number of Occurences')
-    end
-    figure();
-    [acc, predMat, trueMat] = computeClassifierAccuracy(estimatedClass, trueClass, numel(names));
-    displayClassifierResults('Full Pipeline_1dof', trueMat, predMat, acc, prettyNames, '');
-    
+%     if poseEstimateFlag
+%         figure();
+%         hist(fineRotationError)
+%         title('Partial Object, Full Pipeline 1DOF')
+%         xlabel('Rotation Error (Degrees)')
+%         ylabel('Number of Occurences')
+%         
+%         figure();
+%         hist(corseEDTRotationError)
+%         title('Partial Object, 1DOF, EDT Error (corse)')
+%         xlabel('Rotation Error (Degrees)')
+%         ylabel('Number of Occurences')
+%    end
+%     figure();
+%     [acc, predMat, trueMat] = computeClassifierAccuracy(estimatedClass, trueClass, numel(names));
+%     displayClassifierResults('Full Pipeline_1dof', trueMat, predMat, acc, prettyNames, '');
+%     
     %save('fullPipeline_1dof_results.mat');
     
     % This bit of code (almost) plots completion errors in a pretty way. Unfortunatly, I broke it
