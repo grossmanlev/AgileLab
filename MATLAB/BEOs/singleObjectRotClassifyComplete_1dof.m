@@ -113,7 +113,7 @@
         
     else
         if true
-            numSteps = 10;
+            numSteps = 5;
             trans = cell(numSteps, 1); % hold translations being considered
             canidateTransObjVectors = zeros(numSteps, numel(testObject));
             for index=1:numel(trans)
@@ -137,10 +137,10 @@
                 corseReconstructedObject(corseReconstructedObject < thresh) = 0;
                 corseReconstructedObject(corseReconstructedObject >= thresh) = 1;
                 testObject_trans = imtranslate(testObject, [0 0 trans{i}]);
-                %rerrors(end+1) = interObjectDist(corseReconstructedObject, testObject_trans); %#ok<AGROW>
-                rerrors(end+1) = thresh;
+                rerrors(end+1) = interObjectDist(corseReconstructedObject, testObject_trans); %#ok<AGROW>
+                %rerrors(end+1) = thresh;
             end
-            [~, i] = max(rerrors); % find the index where the lowest error occured
+            [~, i] = min(rerrors); % find the index where the lowest error occured
             % rots{i} is where we search arround now, get the angle about z axis (x and y will be zero here anyway);
             transHolder = trans{i};
             corseEDTReconstructedObject = reshape(reconObjs(i, :), vobjectSize1, vobjectSize2, vobjectSize3);
@@ -150,8 +150,8 @@
             
         end
         
-        fineCanidateRotObjVectors = reshape(corseEDTReconstructedObject, numel(testObject), 1, 1)';
-        %fineCanidateRotObjVectors = reshape(corseEDTReconstructedObject, numel(corseEDTReconstructedObject), 1, 1)';
+        %fineCanidateRotObjVectors = reshape(testObject, numel(testObject), 1, 1)';
+        fineCanidateRotObjVectors = reshape(corseEDTReconstructedObject, numel(corseEDTReconstructedObject), 1, 1)';
         fineGrainRots = {compose_rotation_d(0, 0, 0)};
         corseEDTRotationEstimate = fineGrainRots{1};
     end
@@ -193,9 +193,11 @@
     % corosponding reconstruction
     fineReconstructedObject = reshape(fineReconObjs(I, :), vobjectSize1, vobjectSize2, vobjectSize3);
     thresh = mean(prctile(prctile(fineReconstructedObject,90),90));
+    disp(['Thresh: ', num2str(thresh)]);
+    thresh = 0.2;
     fineReconstructedObject(fineReconstructedObject < thresh) = 0; % NOTE: changing this threshold down yields more complete objects, abliet at a coast? (LG)
     fineReconstructedObject(fineReconstructedObject >= thresh) = 1;
-    
+
     if ~rotation % if we're not estimating rotation there is no difference between these two things
         corseEDTReconstructedObject = fineReconstructedObject;
     end
